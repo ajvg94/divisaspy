@@ -1,0 +1,21 @@
+# dependencies
+/node_modules
+
+# logs
+/iisnode
+/server.js.debug/
+/logs
+/.vscode
+
+# production
+/build
+
+# misc and passwords
+.DS_Store
+.env
+web.config
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
