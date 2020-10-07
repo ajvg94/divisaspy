@@ -24,21 +24,14 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 const getHTML = async () => {
-	try {
-		const data = await axios.get('https://www.bbva.com.py/public/');
-		const $ = cheerio.load(data);
-		const postTitles = [];
-
-		$('#quotation-table-div').each((_idx, el) => {
-			const postTitle = $(el).text()
-			postTitles.push(postTitle)
-		});
-
-		return postTitles;
-	} catch (error) {
-		throw error;
-	}
+	axios.get('https://www.bbva.com.py/public/')
+	.then(response => {
+		const html = response.data;
+		const $ = cheerio.load(html);
+		const table = $('#quotation-table > tbody');
+		console.log(table.length);
+	})
+	.catch(console.error);
 };
 
-getHTML()
-.then((postTitles) => console.log(postTitles));
+getHTML();
