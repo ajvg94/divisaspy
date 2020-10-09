@@ -28,7 +28,7 @@ const getHTML = async () => {
 	.then(response => {
 		const html = response.data;
 		const $ = cheerio.load(html);
-		const table = $('#quotation-table > tbody');
+		const table = $('#quotation-table > tbody > .number');
 		console.log(table.length);
 	})
 	.catch(console.error);
