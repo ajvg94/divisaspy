@@ -28,8 +28,24 @@ const getHTML = async () => {
 	.then(response => {
 		const html = response.data;
 		const $ = cheerio.load(html);
-		const table = $('#quotation-table > tbody > .number');
-		console.log(table.length);
+		const tabla = $('#quotation-table > tbody > tr');
+
+		const topPremierLeagueScorers = [];
+
+        tabla.each(function () {
+			const rank = $(this).find('.number').text();
+			const playerName = $(this).find('.playerName > strong').text();
+			const nationality = $(this).find('.playerCountry').text();
+			const goals = $(this).find('.mainStat').text();
+
+			topPremierLeagueScorers.push({
+				rank,
+				name: playerName,
+				nationality,
+				goals,
+			});
+		});
+
 	})
 	.catch(console.error);
 };
