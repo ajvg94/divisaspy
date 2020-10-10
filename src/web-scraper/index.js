@@ -32,7 +32,7 @@ const getHTML = async () => {
 
 		const topPremierLeagueScorers = [];
 
-        tabla.each(function () {
+        /*tabla.each(function () {
 			const rank = $(this).find('.number').text();
 			const playerName = $(this).find('.playerName > strong').text();
 			const nationality = $(this).find('.playerCountry').text();
@@ -44,7 +44,7 @@ const getHTML = async () => {
 				nationality,
 				goals,
 			});
-		});
+		});*/
 
 	})
 	.catch(console.error);
