@@ -32,8 +32,8 @@ const getHTML = async () => {
 
 		let cambiosArray = [];
 
-        $('table table-hover cotiz-tabla>tbody>tr>td').each((i,el) => {
-			cambiosArray.push($(el).find('.number').text());
+        $('.cotiz-tabla>tbody>tr').each((i,el) => {
+			cambiosArray.push($(el).find('td').html());
 		});
 
 		console.log(JSON.stringify(cambiosArray));
