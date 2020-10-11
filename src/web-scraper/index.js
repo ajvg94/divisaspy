@@ -22,30 +22,21 @@ cambios yrendague
 
 const axios = require('axios');
 const cheerio = require('cheerio');
+const { json } = require('express');
 
 const getHTML = async () => {
-	axios.get('https://www.bbva.com.py/public/')
+	axios.get('https://www.cambioschaco.com.py/')
 	.then(response => {
 		const html = response.data;
 		const $ = cheerio.load(html);
-		const tabla = $('#quotation-table > tbody > tr');
 
-		const topPremierLeagueScorers = [];
+		let cambiosArray = [];
 
-        /*tabla.each(function () {
-			const rank = $(this).find('.number').text();
-			const playerName = $(this).find('.playerName > strong').text();
-			const nationality = $(this).find('.playerCountry').text();
-			const goals = $(this).find('.mainStat').text();
+        $('table table-hover cotiz-tabla>tbody>tr>td').each((i,el) => {
+			cambiosArray.push($(el).find('.number').text());
+		});
 
-			topPremierLeagueScorers.push({
-				rank,
-				name: playerName,
-				nationality,
-				goals,
-			});
-		});*/
-
+		console.log(JSON.stringify(cambiosArray));
 	})
 	.catch(console.error);
 };
