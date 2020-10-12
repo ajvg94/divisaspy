@@ -1,5 +1,5 @@
 /*
-CAMBIOS CHACO
+->CAMBIOS CHACO
 CAMBIOS ALBERDI
 MAXICAMBIOS
 SET
@@ -22,23 +22,57 @@ cambios yrendague
 
 const axios = require('axios');
 const cheerio = require('cheerio');
+const e = require('express');
 const { json } = require('express');
 
-const getHTML = async () => {
+const getHTMLCambiosChaco = async () => {
+	let cambiosChaco = [];
 	axios.get('https://www.cambioschaco.com.py/')
-	.then(response => {
-		const html = response.data;
-		const $ = cheerio.load(html);
+		.then(response => {
+			const html = response.data;
+			const $ = cheerio.load(html);
 
-		let cambiosArray = [];
+			const cambiosArray = [];
+			$('.cotiz-tabla>tbody>tr').each((i,el) => {
+				cambiosArray.push($(el).find('td').text().trim());
+			});
+			//console.log(JSON.stringify(cambiosArray));
 
-        $('.cotiz-tabla>tbody>tr').each((i,el) => {
-			cambiosArray.push($(el).find('td').html());
-		});
+			let cambiosArraySplit = [];
+			cambiosArray.forEach(el => {
+				let cotzMoneda = {};
+				cambiosArraySplit = el.split(" ");
+				//console.log(JSON.stringify(cambiosArraySplit));
 
-		console.log(JSON.stringify(cambiosArray));
-	})
-	.catch(console.error);
+				let compraFlag = monedaNameFlag = true;
+				cambiosArraySplit.forEach(el => {
+					let parsedEl = parseFloat(el.replace(".","").replace(",","."));
+					if(!isNaN(parsedEl)){
+						if(compraFlag){
+							cotzMoneda.compra = parsedEl;
+							compraFlag = false;
+						} 
+						else cotzMoneda.venta = parsedEl;
+						
+					}else{
+						if(monedaNameFlag){
+							cotzMoneda.moneda = el;
+							monedaNameFlag = false;
+						}else cotzMoneda.moneda += " "+(el);
+					}
+				});
+				//console.log(JSON.stringify(cotzMoneda));
+				cotzMoneda.moneda = cotzMoneda.moneda.trim();
+				cambiosChaco.push(cotzMoneda);
+
+				cotzMoneda = {};
+				cambiosArraySplit = [];
+			});
+			//console.log(cambiosChaco);
+			return cambiosChaco.splice(22,6);
+		})
+		.catch(console.error);
 };
 
-getHTML();
+let cambiosChaco = await getHTMLCambiosChaco();
+console.log(cambiosChaco);
