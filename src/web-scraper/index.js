@@ -2,8 +2,8 @@
 ->CAMBIOS CHACO
 CAMBIOS ALBERDI
 ->MAXICAMBIOS
-SET
-INTERFISA
+->SET
+->INTERFISA
 AMAMBAY
 MYD CAMBIOS
 BBVA
@@ -77,7 +77,8 @@ const getCotzCambiosChaco = async () => {
 		cambiosArraySplit = [];
 	});
 	cambiosChaco.splice(22,6);
-	//console.log(cambiosChaco);
+	// console.log("cambiosChaco:");
+	// console.log(cambiosChaco);
 }
 getCotzCambiosChaco();
 
@@ -110,7 +111,7 @@ const getCotzMaxiCambios= async () => {
 				else cotzMoneda.venta = parsedEl;
 				
 			}else{
-				cotzMoneda.moneda = el;
+				cotzMoneda.moneda = el.replace(/[.]/g,"");
 			}
 		});
 		//console.log(JSON.stringify(cotzMoneda));
@@ -120,7 +121,8 @@ const getCotzMaxiCambios= async () => {
 		cambiosArraySplit = [];
 	});
 	maxiCambios.splice(17,6);
-	//console.log(maxiCambios);
+	// console.log("maxiCambios:");
+	// console.log(maxiCambios);
 }
 getCotzMaxiCambios();
 
@@ -139,11 +141,43 @@ const getCotzSET= async () => {
 	let set = [];
 	set.push({
 		"moneda":"dolar",
-		"compra":cambiosArray[0],
-		"venta":cambiosArray[1]
+		"compra":parseFloat(cambiosArray[0]),
+		"venta":parseFloat(cambiosArray[1])
 	});
-	console.log(set);     
+	// console.log("SET:");
+	// console.log(set);     
 }
 getCotzSET();
 
 
+const getCotzInterfisa= async () => {
+	
+	let response = await axios.get('https://www.interfisa.com.py/index.php')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let interfisa = [];
+	interfisa.push({
+		"moneda":"dolar",
+		"compra":parseFloat($('#dolar_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#dolar_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+	});
+	interfisa.push({
+		"moneda":"euro",
+		"compra":parseFloat($('#euro_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#euro_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+	});
+	interfisa.push({
+		"moneda":"pesoArg",
+		"compra":parseFloat($('#peso_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#peso_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+	});
+	interfisa.push({
+		"moneda":"real",
+		"compra":parseFloat($('#real_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#real_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+	});
+	// console.log("interfisa:");
+	// console.log(interfisa);     
+}
+getCotzInterfisa();
