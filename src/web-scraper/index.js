@@ -127,7 +127,6 @@ const getCotzMaxiCambios= async () => {
 getCotzMaxiCambios();
 
 const getCotzSET= async () => {
-	
 	let response = await axios.get('https://www.set.gov.py/portal/PARAGUAY-SET')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -149,9 +148,7 @@ const getCotzSET= async () => {
 }
 getCotzSET();
 
-
 const getCotzInterfisa= async () => {
-	
 	let response = await axios.get('https://www.interfisa.com.py/index.php')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -181,3 +178,23 @@ const getCotzInterfisa= async () => {
 	// console.log(interfisa);     
 }
 getCotzInterfisa();
+
+const getCotzBASA= async () => {
+	let response = await axios.get('https://www.bancobasa.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray;
+	let basa = [];
+	cambiosArray = $('ul.trendscontent>li>a.search_link');
+	cambiosArray.each(function () {
+		let cotzMoneda = {};
+		cotzMoneda.moneda = $(this).find('span.descripcion').text();
+		cotzMoneda.compra = parseFloat($(this).find('span.compra').text());
+		cotzMoneda.venta = parseFloat($(this).find('span.venta').text());
+		basa.push(cotzMoneda);
+	});
+	console.log("basa:");
+	console.log(basa);
+}
+getCotzBASA();
