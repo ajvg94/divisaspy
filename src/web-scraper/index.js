@@ -25,6 +25,17 @@ const cheerio = require('cheerio');
 const e = require('express');
 const { json } = require('express');
 
+const removeAcento = (text) =>{       
+    text = text.toLowerCase();                                                         
+    text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
+    text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
+    text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
+    text = text.replace(new RegExp('[ÓÒÔÕ]','gi'), 'o');
+    text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
+    text = text.replace(new RegExp('[Ç]','gi'), 'c');
+    return text;                 
+}
+
 const getCotzCambiosChaco = async () => {
 	let cambiosChaco = [];
 	let response = await axios.get('https://www.cambioschaco.com.py/')
@@ -82,19 +93,19 @@ const getCotzMaxiCambios= async () => {
 
 	const cambiosArray = [];
 	$('.col-xs-12.shadow_exchange>.row').each((i,el) => {
-		cambiosArray.push($(el).text().toString().trim().replace(/\n/g,"").replace(/ /g,""));
+		cambiosArray.push(removeAcento($(el).text().toString().trim().replace(/\n/g,"").replace(/ /g,"")).replace("compra",",").replace("venta",","));
 	});
 	//console.log(JSON.stringify(cambiosArray));
 
 	let cambiosArraySplit = [];
 	cambiosArray.forEach(el => {
 		let cotzMoneda = {};
-		cambiosArraySplit = el.match(/[A-Z][a-z]+/g);
-		console.log(JSON.stringify(cambiosArraySplit));
+		cambiosArraySplit = el.split(",");
+		//console.log(JSON.stringify(cambiosArraySplit));
 
-		/*let compraFlag = monedaNameFlag = true;
+		let compraFlag = true;
 		cambiosArraySplit.forEach(el => {
-			let parsedEl = parseFloat(el.replace(".","").replace(",","."));
+			let parsedEl = parseFloat(el);
 			if(!isNaN(parsedEl)){
 				if(compraFlag){
 					cotzMoneda.compra = parsedEl;
@@ -103,21 +114,17 @@ const getCotzMaxiCambios= async () => {
 				else cotzMoneda.venta = parsedEl;
 				
 			}else{
-				if(monedaNameFlag){
-					cotzMoneda.moneda = el;
-					monedaNameFlag = false;
-				}else cotzMoneda.moneda += " "+(el);
+				cotzMoneda.moneda = el;
 			}
 		});
 		//console.log(JSON.stringify(cotzMoneda));
-		cotzMoneda.moneda = cotzMoneda.moneda.trim();
-		cambiosChaco.push(cotzMoneda);
+		maxiCambios.push(cotzMoneda);
 
 		cotzMoneda = {};
-		cambiosArraySplit = [];*/
+		cambiosArraySplit = [];
 	});
-	/*cambiosChaco.splice(22,6);
-	console.log(cambiosChaco);*/
+	maxiCambios.splice(17,6);
+	console.log(maxiCambios);
 }
 getCotzMaxiCambios();
 
