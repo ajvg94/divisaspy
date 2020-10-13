@@ -124,4 +124,26 @@ const getCotzMaxiCambios= async () => {
 }
 getCotzMaxiCambios();
 
+const getCotzSET= async () => {
+	
+	let response = await axios.get('https://www.set.gov.py/portal/PARAGUAY-SET')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	const cambiosArray = [];
+	$('table.UITable>tbody>tr>td.UICotizacion>p').each((i,el) => {
+		cambiosArray.push($(el).text().toString().replace(/\s/g,"").replace(/[.]/g,"").replace("G",""));
+	});
+	//console.log(JSON.stringify(cambiosArray));
+
+	let set = [];
+	set.push({
+		"moneda":"dolar",
+		"compra":cambiosArray[0],
+		"venta":cambiosArray[1]
+	});
+	console.log(set);     
+}
+getCotzSET();
+
 
