@@ -84,20 +84,15 @@ const getCotzMaxiCambios= async () => {
 	$('.col-xs-12.shadow_exchange>.row').each((i,el) => {
 		cambiosArray.push($(el).text().toString().trim().replace(/\n/g,"").replace(/ /g,""));
 	});
-	console.log(JSON.stringify(cambiosArray));
+	//console.log(JSON.stringify(cambiosArray));
 
-	/*cambiosArray.forEach(el => {
-		el = el.replace("\\n","").replace(" ","");
-	});
-	console.log(JSON.stringify(cambiosArray));*/
-
-	/*let cambiosArraySplit = [];
+	let cambiosArraySplit = [];
 	cambiosArray.forEach(el => {
 		let cotzMoneda = {};
-		cambiosArraySplit = el.split(" ");
-		//console.log(JSON.stringify(cambiosArraySplit));
+		cambiosArraySplit = el.match(/[A-Z][a-z]+/g);
+		console.log(JSON.stringify(cambiosArraySplit));
 
-		let compraFlag = monedaNameFlag = true;
+		/*let compraFlag = monedaNameFlag = true;
 		cambiosArraySplit.forEach(el => {
 			let parsedEl = parseFloat(el.replace(".","").replace(",","."));
 			if(!isNaN(parsedEl)){
@@ -119,9 +114,9 @@ const getCotzMaxiCambios= async () => {
 		cambiosChaco.push(cotzMoneda);
 
 		cotzMoneda = {};
-		cambiosArraySplit = [];
+		cambiosArraySplit = [];*/
 	});
-	cambiosChaco.splice(22,6);
+	/*cambiosChaco.splice(22,6);
 	console.log(cambiosChaco);*/
 }
 getCotzMaxiCambios();
