@@ -1,7 +1,7 @@
 /*
 ->CAMBIOS CHACO
 CAMBIOS ALBERDI
-MAXICAMBIOS
+->MAXICAMBIOS
 SET
 INTERFISA
 AMAMBAY
@@ -19,11 +19,8 @@ mercosur cambios
 panorama cambios
 cambios yrendague
 */
-
 const axios = require('axios');
 const cheerio = require('cheerio');
-const e = require('express');
-const { json } = require('express');
 
 const removeAcento = (text) =>{       
     text = text.toLowerCase();                                                         
@@ -82,7 +79,6 @@ const getCotzCambiosChaco = async () => {
 	cambiosChaco.splice(22,6);
 	//console.log(cambiosChaco);
 }
-
 getCotzCambiosChaco();
 
 const getCotzMaxiCambios= async () => {
@@ -124,7 +120,7 @@ const getCotzMaxiCambios= async () => {
 		cambiosArraySplit = [];
 	});
 	maxiCambios.splice(17,6);
-	console.log(maxiCambios);
+	//console.log(maxiCambios);
 }
 getCotzMaxiCambios();
 
