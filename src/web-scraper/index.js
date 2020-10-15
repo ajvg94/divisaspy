@@ -1,13 +1,13 @@
 /*
 ->CAMBIOS CHACO
-CAMBIOS ALBERDI
+==CAMBIOS ALBERDI
 ->MAXICAMBIOS
 ->SET
 ->INTERFISA
-AMAMBAY
+->AMAMBAY o BASA
 MYD CAMBIOS
-BBVA
-EURO CAMBIOS
+==BBVA
+==EURO CAMBIOS
 MUNDIAL CAMBIOS
 VISIÓN BANCO
 La Moneda Cambios S.A.
@@ -88,7 +88,7 @@ const getCotzMaxiCambios= async () => {
 	const html = response.data;
 	const $ = cheerio.load(html);
 
-	const cambiosArray = [];
+	let cambiosArray = [];
 	$('.col-xs-12.shadow_exchange>.row').each((i,el) => {
 		cambiosArray.push(removeAcento($(el).text().toString().trim().replace(/\n/g,"").replace(/ /g,"")).replace("compra",",").replace("venta",","));
 	});
@@ -131,7 +131,7 @@ const getCotzSET= async () => {
 	const html = response.data;
 	const $ = cheerio.load(html);
 
-	const cambiosArray = [];
+	let cambiosArray = [];
 	$('table.UITable>tbody>tr>td.UICotizacion>p').each((i,el) => {
 		cambiosArray.push($(el).text().toString().replace(/\s/g,"").replace(/[.]/g,"").replace("G",""));
 	});
@@ -184,8 +184,7 @@ const getCotzBASA= async () => {
 	const html = response.data;
 	const $ = cheerio.load(html);
 
-	let cambiosArray;
-	let basa = [];
+	let cambiosArray, basa = [];
 	cambiosArray = $('ul.trendscontent>li>a.search_link');
 	cambiosArray.each(function () {
 		let cotzMoneda = {};
@@ -194,7 +193,40 @@ const getCotzBASA= async () => {
 		cotzMoneda.venta = parseFloat($(this).find('span.venta').text());
 		basa.push(cotzMoneda);
 	});
-	console.log("basa:");
-	console.log(basa);
+	// console.log("basa:");
+	// console.log(basa);
 }
 getCotzBASA();
+
+const getCotzMYD= async () => {
+	const monedaNames = ['dolar','euro','real','pesoArg','pesoChi','libra','dolarCan','francoSui','yen','pesoUru'];
+	let response = await axios.get('https://www.mydcambios.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let myd = [], cambiosArraySplit = [], cambiosArray;
+	cambiosArray = $('.cambios-banner-text.scrollbox>ul');
+	cambiosArray.each(function () {
+		$(this).find('li').each(function ()  {
+			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,""));
+		});
+	});
+	
+	cambiosArraySplit.splice(0,60);cambiosArraySplit.splice(30,77);
+	let i = 0, cotzMoneda = {};
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%3===1) cotzMoneda.moneda = monedaNames[(i/3)];
+		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el);
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parseFloat(el);
+			myd.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	console.log(JSON.stringify(cambiosArraySplit));
+	// console.log("myd:");
+	// console.log(myd);
+}
+getCotzMYD();
+
