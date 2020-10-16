@@ -5,7 +5,7 @@
 ->SET
 ->INTERFISA
 ->AMAMBAY o BASA
-MYD CAMBIOS
+->MYD CAMBIOS
 ==BBVA
 ==EURO CAMBIOS
 MUNDIAL CAMBIOS
@@ -224,9 +224,38 @@ const getCotzMYD= async () => {
 		}
 		i++;
 	});
-	console.log(JSON.stringify(cambiosArraySplit));
 	// console.log("myd:");
 	// console.log(myd);
 }
 getCotzMYD();
+
+const getCotzMundial= async () => {
+	let response = await axios.get('https://mundialcambios.com.py/?branch=6&lang=es')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let  cambiosArraySplit = [], cambiosArray;
+	cambiosArray = $('.w-dyn-item>.w-row');
+	cambiosArray.each(function () {
+		$(this).find('.w-col.w-col-4.w-col-small-4.w-col-tiny-4').each(function ()  {
+			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,""));
+		});
+	});
+	cambiosArraySplit.splice(0,3);
+	
+	let i = 0, mundialcambios = [], cotzMoneda = {};
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%3===1) cotzMoneda.moneda = el;
+		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
+			mundialcambios.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	// console.log("mundialcambios:");
+	// console.log(mundialcambios);
+}
+getCotzMundial();
 
