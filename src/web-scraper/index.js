@@ -1,14 +1,11 @@
 /*
 ->CAMBIOS CHACO
-==CAMBIOS ALBERDI
 ->MAXICAMBIOS
 ->SET
 ->INTERFISA
 ->AMAMBAY o BASA
 ->MYD CAMBIOS
-==BBVA
-==EURO CAMBIOS
-MUNDIAL CAMBIOS
+->MUNDIAL CAMBIOS
 VISIÓN BANCO
 La Moneda Cambios S.A.
 Bonanza Cambios
@@ -18,6 +15,14 @@ cambios parana
 mercosur cambios
 panorama cambios
 cambios yrendague
+banco continental
+BNF
+banco atlas
+banco familiar
+BCP https://www.bcp.gov.py/webapps/web/cotizacion/monedas
+BBVA
+EURO CAMBIOS
+CAMBIOS ALBERDI
 */
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -258,4 +263,34 @@ const getCotzMundial= async () => {
 	// console.log(mundialcambios);
 }
 getCotzMundial();
+
+const getCotzBancoVision= async () => {
+	let response = await axios.get('https://www.visionbanco.com/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let  cambiosArraySplit = [], cambiosArray;
+	cambiosArray = $('.table-bordered--min>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
+		});
+	});
+	cambiosArraySplit.splice(12,9);
+	
+	let i = 0, cotzMoneda = {}, bancoVision = [];
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%3===1) cotzMoneda.moneda = el;
+		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
+			bancoVision.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	// console.log("bancoVision:");
+	// console.log(bancoVision);
+}
+getCotzBancoVision();
 
