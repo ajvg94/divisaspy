@@ -6,7 +6,7 @@
 ->AMAMBAY o BASA
 ->MYD CAMBIOS
 ->MUNDIAL CAMBIOS
-VISIÓN BANCO
+->VISIÓN BANCO
 La Moneda Cambios S.A.
 Bonanza Cambios
 FE CAMBIOS
@@ -87,7 +87,7 @@ const getCotzCambiosChaco = async () => {
 }
 getCotzCambiosChaco();
 
-const getCotzMaxiCambios= async () => {
+const getCotzMaxiCambios = async () => {
 	let maxiCambios = [];
 	let response = await axios.get('https://www.maxicambios.com.py/')
 	const html = response.data;
@@ -131,7 +131,7 @@ const getCotzMaxiCambios= async () => {
 }
 getCotzMaxiCambios();
 
-const getCotzSET= async () => {
+const getCotzSET = async () => {
 	let response = await axios.get('https://www.set.gov.py/portal/PARAGUAY-SET')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -153,7 +153,7 @@ const getCotzSET= async () => {
 }
 getCotzSET();
 
-const getCotzInterfisa= async () => {
+const getCotzInterfisa = async () => {
 	let response = await axios.get('https://www.interfisa.com.py/index.php')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -184,7 +184,7 @@ const getCotzInterfisa= async () => {
 }
 getCotzInterfisa();
 
-const getCotzBASA= async () => {
+const getCotzBASA = async () => {
 	let response = await axios.get('https://www.bancobasa.com.py/')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -203,7 +203,7 @@ const getCotzBASA= async () => {
 }
 getCotzBASA();
 
-const getCotzMYD= async () => {
+const getCotzMYD = async () => {
 	const monedaNames = ['dolar','euro','real','pesoArg','pesoChi','libra','dolarCan','francoSui','yen','pesoUru'];
 	let response = await axios.get('https://www.mydcambios.com.py/')
 	const html = response.data;
@@ -234,7 +234,7 @@ const getCotzMYD= async () => {
 }
 getCotzMYD();
 
-const getCotzMundial= async () => {
+const getCotzMundialCambios = async () => {
 	let response = await axios.get('https://mundialcambios.com.py/?branch=6&lang=es')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -262,9 +262,9 @@ const getCotzMundial= async () => {
 	// console.log("mundialcambios:");
 	// console.log(mundialcambios);
 }
-getCotzMundial();
+getCotzMundialCambios();
 
-const getCotzBancoVision= async () => {
+const getCotzBancoVision = async () => {
 	let response = await axios.get('https://www.visionbanco.com/')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -293,4 +293,35 @@ const getCotzBancoVision= async () => {
 	// console.log(bancoVision);
 }
 getCotzBancoVision();
+
+const getCotzLaMoneda = async () => {
+	let response = await axios.get('http://www.lamoneda.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let  cambiosArraySplit = [], cambiosArray;
+	cambiosArray = $('#cotizaciones1>.container>.row>.col-lg-10.col-lg-offset-1.text-center.text>.row>.col-md-6.col-sm-6>.portfolio-item>table>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
+		});
+	});
+	cambiosArraySplit.splice(16,12);
+	
+	let i = 0, cotzMoneda = {}, bancoVision = [];
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%4===2) cotzMoneda.moneda = el;
+		if((i+1)%4===3) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
+		if((i+1)%4===0) {
+			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
+			bancoVision.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	console.log("bancoVision:");
+	console.log(bancoVision);
+}
+getCotzLaMoneda();
+
 
