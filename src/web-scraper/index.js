@@ -7,7 +7,7 @@
 ->MYD CAMBIOS
 ->MUNDIAL CAMBIOS
 ->VISIÓN BANCO
-La Moneda Cambios S.A.
+->La Moneda Cambios S.A.
 Bonanza Cambios
 FE CAMBIOS
 zafra cambios
@@ -308,20 +308,53 @@ const getCotzLaMoneda = async () => {
 	});
 	cambiosArraySplit.splice(16,12);
 	
-	let i = 0, cotzMoneda = {}, bancoVision = [];
+	let i = 0, cotzMoneda = {}, laMoneda = [];
 	cambiosArraySplit.forEach((el) => {
 		if((i+1)%4===2) cotzMoneda.moneda = el;
 		if((i+1)%4===3) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
 		if((i+1)%4===0) {
 			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
-			bancoVision.push(cotzMoneda);
+			laMoneda.push(cotzMoneda);
 			cotzMoneda = {};
 		}
 		i++;
 	});
-	console.log("bancoVision:");
-	console.log(bancoVision);
+	// console.log("laMoneda:");
+	// console.log(laMoneda);
 }
 getCotzLaMoneda();
 
+const getCotzBonanzaCambios = async () => {
+	let response = await axios.get('https://bonanzacambios.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let  cambiosArraySplit = [], cambiosArray;
+	cambiosArray = $('.flat-pricing.style1>.container>.row>.col-md-12>.table-pricing.style1>table>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
+		});
+	});
+	cambiosArraySplit.splice(23,96);
+	let filteredArray = cambiosArraySplit.filter(function (el) {
+		return el != "";
+	});
+		
+	let i = 0, cotzMoneda = {}, bonanzaCambios = [];
+	filteredArray.forEach((el) => {
+		if((i+1)%3===1) cotzMoneda.moneda = el;
+		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
+			bonanzaCambios.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+
+	console.log("bonanzaCambios:");
+	console.log(bonanzaCambios);
+}
+getCotzBonanzaCambios();
 
