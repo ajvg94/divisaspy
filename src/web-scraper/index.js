@@ -10,8 +10,8 @@
 ->La Moneda Cambios S.A.
 ->Bonanza Cambios
 ->FE CAMBIOS
-zafra cambios
-cambios parana
+->zafra cambios
+cambios rio parana
 mercosur cambios
 panorama cambios
 cambios yrendague
@@ -23,6 +23,8 @@ BCP https://www.bcp.gov.py/webapps/web/cotizacion/monedas
 BBVA
 EURO CAMBIOS
 CAMBIOS ALBERDI
+panorama cambios
+norte cambios
 */
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -394,8 +396,7 @@ const getCotZafraCambios = async () => {
 			cambiosArraySplit.push(removeAcento($(this).text().replace(/\s/g,"").replace(".","").replace(",",".").toLowerCase()).replace("xguaranies","").replace("peso","pesoArg"));
 		});
 	});
-	cambiosArraySplit.splice(0,21);
-	cambiosArraySplit.splice(12,105);
+	cambiosArraySplit.splice(0,21);cambiosArraySplit.splice(12,105);
 
 	let cotzMoneda = {}, zafraCambios = [], i=0;
 	cambiosArraySplit.forEach((el) => {
@@ -410,7 +411,7 @@ const getCotZafraCambios = async () => {
 		i++;
 	});
 
-	console.log("zafraCambios:");
-	console.log(zafraCambios);
+	// console.log("zafraCambios:");
+	// console.log(zafraCambios);
 }
 getCotZafraCambios();
