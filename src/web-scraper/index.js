@@ -8,8 +8,8 @@
 ->MUNDIAL CAMBIOS
 ->VISIÓN BANCO
 ->La Moneda Cambios S.A.
-Bonanza Cambios
-FE CAMBIOS
+->Bonanza Cambios
+->FE CAMBIOS
 zafra cambios
 cambios parana
 mercosur cambios
@@ -95,7 +95,7 @@ const getCotzMaxiCambios = async () => {
 
 	let cambiosArray = [];
 	$('.col-xs-12.shadow_exchange>.row').each((i,el) => {
-		cambiosArray.push(removeAcento($(el).text().toString().trim().replace(/\n/g,"").replace(/ /g,"")).replace("compra",",").replace("venta",","));
+		cambiosArray.push(removeAcento($(el).text().trim().replace(/\n/g,"").replace(/ /g,"")).replace("compra",",").replace("venta",","));
 	});
 	//console.log(JSON.stringify(cambiosArray));
 
@@ -138,7 +138,7 @@ const getCotzSET = async () => {
 
 	let cambiosArray = [];
 	$('table.UITable>tbody>tr>td.UICotizacion>p').each((i,el) => {
-		cambiosArray.push($(el).text().toString().replace(/\s/g,"").replace(/[.]/g,"").replace("G",""));
+		cambiosArray.push($(el).text().replace(/\s/g,"").replace(/[.]/g,"").replace("G",""));
 	});
 	//console.log(JSON.stringify(cambiosArray));
 
@@ -161,23 +161,23 @@ const getCotzInterfisa = async () => {
 	let interfisa = [];
 	interfisa.push({
 		"moneda":"dolar",
-		"compra":parseFloat($('#dolar_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
-		"venta":parseFloat($('#dolar_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+		"compra":parseFloat($('#dolar_compra').text().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#dolar_venta').text().replace(/[.]/g,"").replace(/[,]/g,"."))
 	});
 	interfisa.push({
 		"moneda":"euro",
-		"compra":parseFloat($('#euro_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
-		"venta":parseFloat($('#euro_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+		"compra":parseFloat($('#euro_compra').text().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#euro_venta').text().replace(/[.]/g,"").replace(/[,]/g,"."))
 	});
 	interfisa.push({
 		"moneda":"pesoArg",
-		"compra":parseFloat($('#peso_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
-		"venta":parseFloat($('#peso_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+		"compra":parseFloat($('#peso_compra').text().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#peso_venta').text().replace(/[.]/g,"").replace(/[,]/g,"."))
 	});
 	interfisa.push({
 		"moneda":"real",
-		"compra":parseFloat($('#real_compra').text().toString().replace(/[.]/g,"").replace(/[,]/g,".")),
-		"venta":parseFloat($('#real_venta').text().toString().replace(/[.]/g,"").replace(/[,]/g,"."))
+		"compra":parseFloat($('#real_compra').text().replace(/[.]/g,"").replace(/[,]/g,".")),
+		"venta":parseFloat($('#real_venta').text().replace(/[.]/g,"").replace(/[,]/g,"."))
 	});
 	// console.log("interfisa:");
 	// console.log(interfisa);     
@@ -213,7 +213,7 @@ const getCotzMYD = async () => {
 	cambiosArray = $('.cambios-banner-text.scrollbox>ul');
 	cambiosArray.each(function () {
 		$(this).find('li').each(function ()  {
-			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,""));
+			cambiosArraySplit.push($(this).text().replace(/\s/g,""));
 		});
 	});
 	
@@ -243,7 +243,7 @@ const getCotzMundialCambios = async () => {
 	cambiosArray = $('.w-dyn-item>.w-row');
 	cambiosArray.each(function () {
 		$(this).find('.w-col.w-col-4.w-col-small-4.w-col-tiny-4').each(function ()  {
-			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,""));
+			cambiosArraySplit.push($(this).text().replace(/\s/g,""));
 		});
 	});
 	cambiosArraySplit.splice(0,3);
@@ -273,7 +273,7 @@ const getCotzBancoVision = async () => {
 	cambiosArray = $('.table-bordered--min>tbody>tr');
 	cambiosArray.each(function () {
 		$(this).find('td').each(function ()  {
-			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
+			cambiosArraySplit.push($(this).text().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
 		});
 	});
 	cambiosArraySplit.splice(12,9);
@@ -303,7 +303,7 @@ const getCotzLaMoneda = async () => {
 	cambiosArray = $('#cotizaciones1>.container>.row>.col-lg-10.col-lg-offset-1.text-center.text>.row>.col-md-6.col-sm-6>.portfolio-item>table>tbody>tr');
 	cambiosArray.each(function () {
 		$(this).find('td').each(function ()  {
-			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
+			cambiosArraySplit.push($(this).text().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
 		});
 	});
 	cambiosArraySplit.splice(16,12);
@@ -333,7 +333,7 @@ const getCotzBonanzaCambios = async () => {
 	cambiosArray = $('.flat-pricing.style1>.container>.row>.col-md-12>.table-pricing.style1>table>tbody>tr');
 	cambiosArray.each(function () {
 		$(this).find('td').each(function ()  {
-			cambiosArraySplit.push($(this).text().toString().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
+			cambiosArraySplit.push($(this).text().replace(/\s/g,"").toLowerCase().replace("compra","").replace("venta","").replace("ñ","n"));
 		});
 	});
 	cambiosArraySplit.splice(23,96);
@@ -352,9 +352,65 @@ const getCotzBonanzaCambios = async () => {
 		}
 		i++;
 	});
-
-	console.log("bonanzaCambios:");
-	console.log(bonanzaCambios);
+	// console.log("bonanzaCambios:");
+	// console.log(bonanzaCambios);
 }
 getCotzBonanzaCambios();
 
+const getCotzFeCambios = async () => {
+	const monedaNames = ['dolar','euro','pesoArg','real'];
+	let response = await axios.get('http://www.fecambios.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let  cambiosArraySplit = [], cambiosArray, cotzMoneda = {}, feCambios = [], i=0;
+	cambiosArray = $('.wrap-cotizacion>.sliprincip>div>ul>li');
+	cambiosArray.each(function () {
+		$(this).find('.right.s120.aligncenter').each(function ()  {
+			cotzMoneda.moneda = monedaNames[i];
+			cotzMoneda.compra = parseFloat($(this).find('.compra').text().replace(",00","").replace(".","").replace(",","."));
+			cotzMoneda.venta = parseFloat($(this).find('.venta').text().replace(",00","").replace(".","").replace(",","."));
+			i++;
+			
+			feCambios.push(cotzMoneda);
+			cotzMoneda={};
+		});
+	});
+
+	// console.log("feCambios:");
+	// console.log(feCambios);
+}
+getCotzFeCambios();
+
+const getCotZafraCambios = async () => {
+	let response = await axios.get('https://zafracambios.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('.img-bg.col-xs-12.col-md-6>.cotacao-box>.conteudo>.table-cotacao>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push(removeAcento($(this).text().replace(/\s/g,"").replace(".","").replace(",",".").toLowerCase()).replace("xguaranies","").replace("peso","pesoArg"));
+		});
+	});
+	cambiosArraySplit.splice(0,21);
+	cambiosArraySplit.splice(12,105);
+
+	let cotzMoneda = {}, zafraCambios = [], i=0;
+	cambiosArraySplit.forEach((el) => {
+		let parsedEl = parseFloat(el);
+		if((i+1)%3===1) cotzMoneda.moneda = el;
+		if((i+1)%3===2) cotzMoneda.compra = parsedEl;
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parsedEl;
+			zafraCambios.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+
+	console.log("zafraCambios:");
+	console.log(zafraCambios);
+}
+getCotZafraCambios();
