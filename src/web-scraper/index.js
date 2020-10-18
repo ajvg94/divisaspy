@@ -13,7 +13,7 @@
 ->zafra cambios
 //->cambios rio parana comentado porque esta desactualizado
 ->mercosur cambios
-panorama cambios
+->panorama cambios
 cambios yrendague
 banco continental
 BNF
@@ -515,7 +515,7 @@ const getCotzPanoramaCambios = async () => {
 		i++;
 	});
 
-	console.log("panoramaCambios:");
-	console.log(panoramaCambios);	
+	// console.log("panoramaCambios:");
+	// console.log(panoramaCambios);	
 }
 getCotzPanoramaCambios();
