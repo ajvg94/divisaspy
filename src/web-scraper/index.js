@@ -11,7 +11,7 @@
 ->Bonanza Cambios
 ->FE CAMBIOS
 ->zafra cambios
-->cambios rio parana
+//->cambios rio parana comentado porque esta desactualizado
 ->mercosur cambios
 panorama cambios
 cambios yrendague
@@ -416,41 +416,41 @@ const getCotzZafraCambios = async () => {
 }
 getCotzZafraCambios();
 
-const getCotzRioParana = async () => {
-	const monedaNames = ['dolar','euro','pesoArg','real'];
-	let response = await axios.get('https://www.cambiosrioparana.com.py/');
-	const html = response.data;
-	const $ = cheerio.load(html);
+// const getCotzRioParana = async () => {
+// 	const monedaNames = ['dolar','euro','pesoArg','real'];
+// 	let response = await axios.get('https://www.cambiosrioparana.com.py/');
+// 	const html = response.data;
+// 	const $ = cheerio.load(html);
 
-	let cambiosArray, cambiosArraySplit = [];
-	cambiosArray = $('#content_sucursales>.col-lg-6.col-md-6.col-sm-6.col-xs-12>.block>.listaMoneda');
-	cambiosArray.each(function () {
-		$(this).find('li').each(function ()  {
-			$(this).find('.col-lg-3.col-md-3.col-sm-3.col-xs-4').each(function ()  {
-				cambiosArraySplit.push($(this).text().replace(",00","").replace(".","").replace(",",".").trim());
-			});
-		});
-	});
-	cambiosArraySplit.splice(8,64);
+// 	let cambiosArray, cambiosArraySplit = [];
+// 	cambiosArray = $('#content_sucursales>.col-lg-6.col-md-6.col-sm-6.col-xs-12>.block>.listaMoneda');
+// 	cambiosArray.each(function () {
+// 		$(this).find('li').each(function ()  {
+// 			$(this).find('.col-lg-3.col-md-3.col-sm-3.col-xs-4').each(function ()  {
+// 				cambiosArraySplit.push($(this).text().replace(",00","").replace(".","").replace(",",".").trim());
+// 			});
+// 		});
+// 	});
+// 	cambiosArraySplit.splice(8,64);
 
-	let cotzMoneda = {}, rioParana = [], i=0;
-	cambiosArraySplit.forEach((el) => {
-		if((i+1)%2===0) {
-			cotzMoneda.venta = el;
-			rioParana.push(cotzMoneda);
-			cotzMoneda = {};
-		}else if((i+1)%2===1) {
-			cotzMoneda.moneda = monedaNames[i/2];
-			cotzMoneda.compra = el;
-		}
-		i++;
-	});
+// 	let cotzMoneda = {}, rioParana = [], i=0;
+// 	cambiosArraySplit.forEach((el) => {
+// 		if((i+1)%2===0) {
+// 			cotzMoneda.venta = el;
+// 			rioParana.push(cotzMoneda);
+// 			cotzMoneda = {};
+// 		}else if((i+1)%2===1) {
+// 			cotzMoneda.moneda = monedaNames[i/2];
+// 			cotzMoneda.compra = el;
+// 		}
+// 		i++;
+// 	});
 
-	// console.log("rioParana:");
-	// console.log(rioParana);
+// 	// console.log("rioParana:");
+// 	// console.log(rioParana);
 	
-}
-getCotzRioParana();
+// }
+// getCotzRioParana();
 
 const getCotzMercosurCambios = async () => {
 	const monedaNames = ['dolar','real','euro','pesoArg'];
