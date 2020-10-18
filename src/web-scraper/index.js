@@ -11,8 +11,8 @@
 ->Bonanza Cambios
 ->FE CAMBIOS
 ->zafra cambios
-cambios rio parana
-mercosur cambios
+->cambios rio parana
+->mercosur cambios
 panorama cambios
 cambios yrendague
 banco continental
@@ -384,7 +384,7 @@ const getCotzFeCambios = async () => {
 }
 getCotzFeCambios();
 
-const getCotZafraCambios = async () => {
+const getCotzZafraCambios = async () => {
 	let response = await axios.get('https://zafracambios.com.py/')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -414,9 +414,9 @@ const getCotZafraCambios = async () => {
 	// console.log("zafraCambios:");
 	// console.log(zafraCambios);
 }
-getCotZafraCambios();
+getCotzZafraCambios();
 
-const getCotRioParana = async () => {
+const getCotzRioParana = async () => {
 	const monedaNames = ['dolar','euro','pesoArg','real'];
 	let response = await axios.get('https://www.cambiosrioparana.com.py/');
 	const html = response.data;
@@ -432,7 +432,6 @@ const getCotRioParana = async () => {
 		});
 	});
 	cambiosArraySplit.splice(8,64);
-	console.log(JSON.stringify(cambiosArraySplit));
 
 	let cotzMoneda = {}, rioParana = [], i=0;
 	cambiosArraySplit.forEach((el) => {
@@ -447,8 +446,42 @@ const getCotRioParana = async () => {
 		i++;
 	});
 
-	console.log("rioParana:");
-	console.log(rioParana);
+	// console.log("rioParana:");
+	// console.log(rioParana);
 	
 }
-getCotRioParana();
+getCotzRioParana();
+
+const getCotzMercosurCambios = async () => {
+	const monedaNames = ['dolar','real','euro','pesoArg'];
+	let response = await axios.get('https://2019.mercosurcambios.com/');
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('.table-responsive>table>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('th').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim());
+		});
+	});
+	cambiosArraySplit.splice(25,111);
+	cambiosArraySplit.splice(10,5);
+
+	let cotzMoneda = {}, mercosurCambios = [], i=0, arrayIndex = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%5===1) cotzMoneda.moneda = monedaNames[arrayIndex];
+		else if((i+1)%5===0) {
+			cotzMoneda.venta = parseFloat(el);
+			mercosurCambios.push(cotzMoneda);
+			cotzMoneda = {};
+			arrayIndex++;
+		}else if((i+1)%5===4) cotzMoneda.compra = parseFloat(el);
+
+		i++;
+	});
+
+	// console.log("mercosurCambios:");
+	// console.log(mercosurCambios);	
+}
+getCotzMercosurCambios();
