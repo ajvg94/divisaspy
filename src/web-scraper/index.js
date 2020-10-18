@@ -23,7 +23,6 @@ BCP https://www.bcp.gov.py/webapps/web/cotizacion/monedas
 BBVA
 EURO CAMBIOS
 CAMBIOS ALBERDI
-panorama cambios
 norte cambios
 */
 const axios = require('axios');
@@ -485,3 +484,38 @@ const getCotzMercosurCambios = async () => {
 	// console.log(mercosurCambios);	
 }
 getCotzMercosurCambios();
+
+const getCotzPanoramaCambios = async () => {
+	const monedaNames = ['dolar','real','euro','pesoArg'];
+	let response = await axios.get('https://panoramacambios.com/');
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('.toggled-item>.rate-info-separator>.rate-tables>.rate-table-wrapper>table');
+	cambiosArray.each(function () {
+		$(this).find('tbody>tr>td').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim());
+		});
+	});
+	cambiosArraySplit.splice(0,6);cambiosArraySplit.splice(10,42);cambiosArraySplit.splice(4,2);
+	
+	let cotzMoneda = {}, panoramaCambios = [], i=0, arrayIndex = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%2===1) {
+			cotzMoneda.moneda = monedaNames[arrayIndex];
+			cotzMoneda.compra = parseFloat(el);
+		}
+		else{
+			cotzMoneda.venta = parseFloat(el);
+			panoramaCambios.push(cotzMoneda);
+			cotzMoneda = {};
+			arrayIndex++;
+		}
+		i++;
+	});
+
+	console.log("panoramaCambios:");
+	console.log(panoramaCambios);	
+}
+getCotzPanoramaCambios();
