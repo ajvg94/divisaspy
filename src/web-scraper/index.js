@@ -14,7 +14,7 @@
 //->cambios rio parana comentado porque esta desactualizado
 ->mercosur cambios
 ->panorama cambios
-cambios yrendague
+->cambios yrendague
 banco continental
 BNF
 banco atlas
@@ -50,13 +50,11 @@ const getCotzCambiosChaco = async () => {
 	$('.cotiz-tabla>tbody>tr').each((i,el) => {
 		cambiosArray.push($(el).find('td').text().trim());
 	});
-	//console.log(JSON.stringify(cambiosArray));
 
 	let cambiosArraySplit = [];
 	cambiosArray.forEach(el => {
 		let cotzMoneda = {};
 		cambiosArraySplit = el.split(" ");
-		//console.log(JSON.stringify(cambiosArraySplit));
 
 		let compraFlag = monedaNameFlag = true;
 		cambiosArraySplit.forEach(el => {
@@ -75,7 +73,6 @@ const getCotzCambiosChaco = async () => {
 				}else cotzMoneda.moneda += " "+(el);
 			}
 		});
-		//console.log(JSON.stringify(cotzMoneda));
 		cotzMoneda.moneda = cotzMoneda.moneda.trim();
 		cambiosChaco.push(cotzMoneda);
 
@@ -205,7 +202,7 @@ const getCotzBASA = async () => {
 getCotzBASA();
 
 const getCotzMYD = async () => {
-	const monedaNames = ['dolar','euro','real','pesoArg','pesoChi','libra','dolarCan','francoSui','yen','pesoUru'];
+	const monedaNames = ['dolar','euro','real','pesoArg','pesoChi','libra','dolarCanadiense','francoSuizo','yen','pesoUru'];
 	let response = await axios.get('https://www.mydcambios.com.py/')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -550,7 +547,43 @@ const getCotzYrendague = async () => {
 		i++;
 	});
 
-	console.log("yrendague:");
-	console.log(yrendague);	
+	// console.log("yrendague:");
+	// console.log(yrendague);	
 }
 getCotzYrendague();
+
+const getCotzContinental = async () => {
+	const monedaNames = ['dolar','pesoArg','real','yen','francoSuizo','euro','libra','dolarCanadiense','dolarAustraliano','pesoUru'];
+	let response = await axios.get('https://www.bancontinental.com.py/');
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('.cotizaciones>.container')
+	cambiosArray.each(function () {
+		$(this).find('b').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim().replace(".","").replace(",","."));
+		});
+	});
+	cambiosArraySplit.splice(20,4);
+	console.log(JSON.stringify(cambiosArraySplit));
+
+	let cotzMoneda = {}, continental = [], i=0, arrayIndex = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%2===1) {
+			cotzMoneda.moneda = monedaNames[arrayIndex];
+			cotzMoneda.compra = parseFloat(el);
+		}
+		else{
+			cotzMoneda.venta = parseFloat(el);
+			continental.push(cotzMoneda);
+			cotzMoneda = {};
+			arrayIndex++;
+		}
+		i++;
+	});
+
+	// console.log("continental:");
+	// console.log(continental);	
+}
+getCotzContinental();
