@@ -519,3 +519,38 @@ const getCotzPanoramaCambios = async () => {
 	// console.log(panoramaCambios);	
 }
 getCotzPanoramaCambios();
+
+const getCotzYrendague = async () => {
+	const monedaNames = ['dolar','real','pesoArg','euro'];
+	let response = await axios.get('https://www.yrendague.com.py/');
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('#suc_2>.cotacao-box>.conteudo>table>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim().replace(".","").replace(",","."));
+		});
+	});
+	cambiosArraySplit.splice(12,15);
+
+	let cotzMoneda = {}, yrendague = [], i=0, arrayIndex = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%3===2) {
+			cotzMoneda.moneda = monedaNames[arrayIndex];
+			cotzMoneda.compra = parseFloat(el);
+		}
+		else if((i+1)%3===0){
+			cotzMoneda.venta = parseFloat(el);
+			yrendague.push(cotzMoneda);
+			cotzMoneda = {};
+			arrayIndex++;
+		}
+		i++;
+	});
+
+	console.log("yrendague:");
+	console.log(yrendague);	
+}
+getCotzYrendague();
