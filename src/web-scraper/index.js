@@ -16,17 +16,18 @@
 ->panorama cambios
 ->cambios yrendague
 ->banco continental
-BNF
-banco atlas
-banco familiar
-BCP https://www.bcp.gov.py/webapps/web/cotizacion/monedas
-BBVA
+->BNF
+xxx banco atlas
+->banco familiar
+->BCP 
+xxx BBVA
 EURO CAMBIOS
 CAMBIOS ALBERDI
 norte cambios
 */
 const axios = require('axios');
 const cheerio = require('cheerio');
+const https = require('https');
 
 const removeAcento = (text) =>{       
     text = text.toLowerCase();                                                         
@@ -60,6 +61,35 @@ const getCotzBancoBASA = async () => {
 	return(bancoBasa);
 }
 
+const getCotzBancoBNF = async () => {
+	const monedaNames = ['USD','ARS','BRL','EUR'];
+	let response = await axios.get('https://www.bnf.gov.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('#modalCotizaciones>.modal-dialog>.modal-content>.modal-body>table>tbody>tr');
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim());
+		});
+	});
+	let cotzMoneda = {}, bnf = [], i = 0, arrayIndex = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%4===3) {
+			cotzMoneda.moneda = monedaNames[arrayIndex];
+			cotzMoneda.compra = parseFloat(el);
+			arrayIndex++;
+		}else if((i+1)%4===0) {
+			cotzMoneda.venta = parseFloat(el);
+			bnf.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	return(bnf);
+}
+
 const getCotzBancoContinental = async () => {
 	const monedaNames = ['USD','ARS','real','JPY','CHF','EUR','GBP','CAD','AUD','UYU'];
 	let response = await axios.get('https://www.bancontinental.com.py/');
@@ -90,6 +120,38 @@ const getCotzBancoContinental = async () => {
 		i++;
 	});
 	return(continental);	
+}
+
+const getCotzBancoFamiliar = async () => {
+	const monedaNames = ['USD','ARS','BRL','EUR'];
+	let response = await axios.get('https://www.familiar.com.py/')
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('#cotizaciones>.container>.row');
+
+	cambiosArray.each(function () {
+		$(this).find('strong').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim().replace(".","").replace(",","."));
+		});
+	});
+	cambiosArraySplit.splice(2,2);cambiosArraySplit.splice(8,2);
+
+	let cotzMoneda = {}, familiar = [], i = 0, arrayIndex = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%2===1) {
+			cotzMoneda.moneda = monedaNames[arrayIndex];
+			cotzMoneda.compra = parseFloat(el);
+			arrayIndex++;
+		}else if((i+1)%2===0) {
+			cotzMoneda.venta = parseFloat(el);
+			familiar.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	return(familiar);
 }
 
 const getCotzBancoInterfisa = async () => {
@@ -549,6 +611,36 @@ const getCotzCambiosZafra = async () => {
 }
 ////#endregion =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 ////#region OTROS=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+const getCotzBCP = async () => {
+	const agent = new https.Agent({  
+		rejectUnauthorized: false
+	});
+	let response = await axios.get('https://www.bcp.gov.py/webapps/web/cotizacion/monedas', { httpsAgent: agent });
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('#cotizacion-interbancaria>tbody>tr');
+
+	cambiosArray.each(function () {
+		$(this).find('td').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim().replace(".","").replace(",","."));
+		});
+	});
+
+	let cotzMoneda = {}, bcp = [], i = 0;
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%4===2) cotzMoneda.moneda = el;
+		else if((i+1)%4===0) {
+			cotzMoneda.venta = parseFloat(el);
+			bcp.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+	return(bcp);	
+}
+
 const getCotzSET = async () => {
 	let response = await axios.get('https://www.set.gov.py/portal/PARAGUAY-SET')
 	const html = response.data;
@@ -569,7 +661,35 @@ const getCotzSET = async () => {
 	return(set);     
 }
 ////#endregion =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+const getCotzCambiosEuroCambios = async () => {
+	let response = await axios.get('https://eurocambios.com.py/v2/');
+	const html = response.data;
+	const $ = cheerio.load(html);
+
+	let cambiosArray, cambiosArraySplit = [];
+	cambiosArray = $('.col-md-6>.form-group.col-md-12>.table-cotizacion-bordered.contentTableSmall>tbody>tr');
+	console.log(cambiosArray.length);
+	cambiosArray.each(function () {
+		$(this).find('.align-right').each(function ()  {
+			cambiosArraySplit.push($(this).text().trim().replace(".","").replace(",","."));
+		});
+	});
+	console.log(cambiosArraySplit);
+	// let cotzMoneda = {}, bcp = [], i = 0;
+	// cambiosArraySplit.forEach((el) => {
+	// 	if((i+1)%4===2) cotzMoneda.moneda = el;
+	// 	else if((i+1)%4===0) {
+	// 		cotzMoneda.venta = parseFloat(el);
+	// 		bcp.push(cotzMoneda);
+	// 		cotzMoneda = {};
+	// 	}
+	// 	i++;
+	// });
+	// return(bcp);	
+}
+
 const getCotizaciones = async () => {
+/*
 	//CASAS DE CAMBIO
 	console.log('cambiosBonanza');
 	console.log(await getCotzCambiosBonanza());
@@ -598,14 +718,23 @@ const getCotizaciones = async () => {
 	//BANCOS
 	console.log('BancoBASA');
 	console.log(await getCotzBancoBASA());
+	console.log('BancoBNF');
+	console.log(await getCotzBancoBNF());
 	console.log('BancoContinental');
 	console.log(await getCotzBancoContinental());
+	console.log('BancoFamiliar');
+	console.log(await getCotzBancoFamiliar());
 	console.log('BancoInterfisa');
 	console.log(await getCotzBancoInterfisa());
 	console.log('BancoVision');
 	console.log(await getCotzBancoVision());
 	//OTROS
+	console.log('BCP');
+	console.log(await getCotzBCP());
 	console.log('SET');
 	console.log(await getCotzSET());
+*/
+	console.log('CambiosEuroCambios');
+	console.log(await getCotzCambiosEuroCambios());
 }
 getCotizaciones();
