@@ -17,11 +17,11 @@
 ->cambios yrendague
 ->banco continental
 ->BNF
-xxx banco atlas
 ->banco familiar
 ->BCP 
+xxx banco atlas
 xxx BBVA
-EURO CAMBIOS
+xxx EURO CAMBIOS
 CAMBIOS ALBERDI
 norte cambios
 */
@@ -39,7 +39,8 @@ const removeAcento = (text) =>{
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
     return text;                 
 }
-////#region BANCOS=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+//*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+//#region BANCOS
 const getCotzBancoBASA = async () => {
 	const monedaNames = ['USD','','BRL','ARS','EUR'];
 	let response = await axios.get('https://www.bancobasa.com.py/');
@@ -214,8 +215,9 @@ const getCotzBancoVision = async () => {
 	});
 	return(bancoVision);
 }
-////#endregion =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-////#region CASAS DE CAMBIO=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+//#endregion
+//*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+//#region CASAS DE CAMBIO
 const getCotzCambiosBonanza = async () => {
 	const monedaNames = ['USD','EUR','ARS','BRL'];
 	let response = await axios.get('https://bonanzacambios.com.py/')
@@ -609,8 +611,9 @@ const getCotzCambiosZafra = async () => {
 	});
 	return(zafraCambios);
 }
-////#endregion =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-////#region OTROS=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+//#endregion 
+//*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+//#region OTROS
 const getCotzBCP = async () => {
 	const agent = new https.Agent({  
 		rejectUnauthorized: false
@@ -660,33 +663,9 @@ const getCotzSET = async () => {
 
 	return(set);     
 }
-////#endregion =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-const getCotzCambiosEuroCambios = async () => {
-	let response = await axios.get('https://eurocambios.com.py/v2/');
-	const html = response.data;
-	const $ = cheerio.load(html);
+//#endregion 
+//*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
-	let cambiosArray, cambiosArraySplit = [];
-	cambiosArray = $('.col-md-6>.form-group.col-md-12>.table-cotizacion-bordered.contentTableSmall>tbody>tr');
-	console.log(cambiosArray.length);
-	cambiosArray.each(function () {
-		$(this).find('.align-right').each(function ()  {
-			cambiosArraySplit.push($(this).text().trim().replace(".","").replace(",","."));
-		});
-	});
-	console.log(cambiosArraySplit);
-	// let cotzMoneda = {}, bcp = [], i = 0;
-	// cambiosArraySplit.forEach((el) => {
-	// 	if((i+1)%4===2) cotzMoneda.moneda = el;
-	// 	else if((i+1)%4===0) {
-	// 		cotzMoneda.venta = parseFloat(el);
-	// 		bcp.push(cotzMoneda);
-	// 		cotzMoneda = {};
-	// 	}
-	// 	i++;
-	// });
-	// return(bcp);	
-}
 
 const getCotizaciones = async () => {
 /*
@@ -734,7 +713,5 @@ const getCotizaciones = async () => {
 	console.log('SET');
 	console.log(await getCotzSET());
 */
-	console.log('CambiosEuroCambios');
-	console.log(await getCotzCambiosEuroCambios());
 }
 getCotizaciones();
