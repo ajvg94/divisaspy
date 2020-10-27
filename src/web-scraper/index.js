@@ -714,4 +714,5 @@ const getCotizaciones = async () => {
 	console.log(await getCotzSET());
 */
 }
+
 getCotizaciones();
