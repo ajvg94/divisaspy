@@ -4,7 +4,7 @@
 ->SET
 ->INTERFISA
 ->AMAMBAY o BASA
-->MYD CAMBIOS
+->->MYD CAMBIOS
 ->MUNDIAL CAMBIOS
 ->VISIÓN BANCO
 ->La Moneda Cambios S.A.
@@ -439,9 +439,14 @@ const getCotzCambiosMercosur = async () => {
 }
 
 const getCotzCambiosMundial = async () => {
+	let mundialcambios = [];
+	let ASU = [];
+	let CDE = [];
+
+	//ASU
 	let response = await axios.get('https://mundialcambios.com.py/?branch=6&lang=es')
-	const html = response.data;
-	const $ = cheerio.load(html);
+	let html = response.data;
+	let $ = cheerio.load(html);
 
 	let  cambiosArraySplit = [], cambiosArray;
 	cambiosArray = $('.w-dyn-item>.w-row');
@@ -452,17 +457,47 @@ const getCotzCambiosMundial = async () => {
 	});
 	cambiosArraySplit.splice(0,3);
 	
-	let i = 0, mundialcambios = [], cotzMoneda = {};
+	let i = 0, cotzMoneda = {};
 	cambiosArraySplit.forEach((el) => {
 		if((i+1)%3===1) cotzMoneda.moneda = el;
 		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
 		if((i+1)%3===0) {
 			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
-			mundialcambios.push(cotzMoneda);
+			ASU.push(cotzMoneda);
 			cotzMoneda = {};
 		}
 		i++;
 	});
+	
+	//CDE
+	response = await axios.get('http://mundialcambios.com.py/?branch=1&lang=es')
+	html = response.data;
+	$ = cheerio.load(html);
+
+	cambiosArraySplit = [], cambiosArray;
+	cambiosArray = $('.w-dyn-item>.w-row');
+	cambiosArray.each(function () {
+		$(this).find('.w-col.w-col-4.w-col-small-4.w-col-tiny-4').each(function ()  {
+			cambiosArraySplit.push($(this).text().replace(/\s/g,""));
+		});
+	});
+	cambiosArraySplit.splice(0,3);
+	
+	i = 0, cotzMoneda = {};
+	cambiosArraySplit.forEach((el) => {
+		if((i+1)%3===1) cotzMoneda.moneda = el;
+		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el.replace(".","").replace(",","."));
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parseFloat(el.replace(".","").replace(",","."));
+			CDE.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+
+	mundialcambios.ASU = ASU;
+	mundialcambios.CDE = CDE;
+
 	return(mundialcambios);
 }
 
@@ -716,8 +751,8 @@ const getCotizaciones = async () => {
 	// console.log(await getCotzCambiosMercosur());
 	// console.log('CambiosMundial');
 	// console.log(await getCotzCambiosMundial());
-	console.log('CambiosMYD');
-	console.log(await getCotzCambiosMYD());
+	// console.log('CambiosMYD');
+	// console.log(await getCotzCambiosMYD());
 	// console.log('CambiosPanorama');
 	// console.log(await getCotzCambiosPanorama());
 	// //console.log('CambiosRioParana');
