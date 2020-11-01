@@ -1,6 +1,6 @@
 /*
 ->CAMBIOS CHACO
-->MAXICAMBIOS
+->->MAXICAMBIOS
 ->SET
 ->INTERFISA
 ->AMAMBAY o BASA
@@ -356,7 +356,8 @@ const getCotzCambiosLaMoneda = async () => {
 const getCotzCambiosMaxiCambios = async () => {
 	let monedaNames = ['USD','ARS','BRL','UYU','EUR','GBP','JPY','CLP','ZAR','CNY','CAD','AUD','CHF','MXN','PEN','BOB','COP'];
 	let maxiCambios =[]
-	let ASU = CDE =  [];
+	let ASU = [];
+	let CDE =  [];
 	let response = await axios.get('https://www.maxicambios.com.py/')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -466,31 +467,51 @@ const getCotzCambiosMundial = async () => {
 }
 
 const getCotzCambiosMYD = async () => {
-	const monedaNames = ['USD','EUR','BRL','ARS','CLP','GBP','CAD','CHF','JPY','UYU'];
+	let monedaNames = ['USD','EUR','BRL','ARS','CLP','GBP','CAD','CHF','JPY','UYU'];
 	let response = await axios.get('https://www.mydcambios.com.py/')
 	const html = response.data;
 	const $ = cheerio.load(html);
 
-	let cambiosMyd = [], cambiosArraySplit = [], cambiosArray;
+	let cambiosMyd = [];
+	let ASU = [];
+	let CDE =[];
+	let cambiosArraySplit = [], cambiosArray;
 	cambiosArray = $('.cambios-banner-text.scrollbox>ul');
 	cambiosArray.each(function () {
 		$(this).find('li').each(function ()  {
 			cambiosArraySplit.push($(this).text().replace(/\s/g,""));
 		});
 	});
-	
-	cambiosArraySplit.splice(0,60);cambiosArraySplit.splice(30,77);
+
+	cambiosArraySplit.splice(0,60);
+	let cambiosArraySplitCDE = cambiosArraySplit.splice(30,77);
+
 	let i = 0, cotzMoneda = {};
 	cambiosArraySplit.forEach((el) => {
 		if((i+1)%3===1) cotzMoneda.moneda = monedaNames[(i/3)];
 		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el);
 		if((i+1)%3===0) {
 			cotzMoneda.venta = parseFloat(el);
-			cambiosMyd.push(cotzMoneda);
+			ASU.push(cotzMoneda);
 			cotzMoneda = {};
 		}
 		i++;
 	});
+	cambiosArraySplitCDE.splice(0,3);cambiosArraySplitCDE.splice(2,3);
+	monedaNames = ['USD','BRL','ARS','EUR','GBP','UYU']; i = 0;
+	cambiosArraySplitCDE.forEach((el) => {
+		if((i+1)%3===1) cotzMoneda.moneda = monedaNames[(i/3)];
+		if((i+1)%3===2) cotzMoneda.compra = parseFloat(el);
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parseFloat(el);
+			CDE.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+
+	cambiosMyd.ASU = ASU;
+	cambiosMyd.CDE = CDE;
 	return(cambiosMyd);
 }
 
@@ -689,14 +710,14 @@ const getCotizaciones = async () => {
 	// console.log(await getCotzCambiosFe());
 	// console.log('CambiosLaMoneda');
 	// console.log(await getCotzCambiosLaMoneda());
-	console.log('cambiosMaxiCambios');
-	console.log(await getCotzCambiosMaxiCambios());
+	// console.log('cambiosMaxiCambios');
+	// console.log(await getCotzCambiosMaxiCambios());
 	// console.log('CambiosMercosur');
 	// console.log(await getCotzCambiosMercosur());
 	// console.log('CambiosMundial');
 	// console.log(await getCotzCambiosMundial());
-	// console.log('CambiosMYD');
-	// console.log(await getCotzCambiosMYD());
+	console.log('CambiosMYD');
+	console.log(await getCotzCambiosMYD());
 	// console.log('CambiosPanorama');
 	// console.log(await getCotzCambiosPanorama());
 	// //console.log('CambiosRioParana');
