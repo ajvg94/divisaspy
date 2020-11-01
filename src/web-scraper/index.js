@@ -354,8 +354,9 @@ const getCotzCambiosLaMoneda = async () => {
 }
 
 const getCotzCambiosMaxiCambios = async () => {
-	const monedaNames = ['USD','ARS','BRL','UYU','EUR','GBP','JPY','CLP','ZAR','CNY','CAD','AUD','CHF','MXN','PEN','BOB','COP'];
-	let maxiCambios = [];
+	let monedaNames = ['USD','ARS','BRL','UYU','EUR','GBP','JPY','CLP','ZAR','CNY','CAD','AUD','CHF','MXN','PEN','BOB','COP'];
+	let maxiCambios =[]
+	let ASU = CDE =  [];
 	let response = await axios.get('https://www.maxicambios.com.py/')
 	const html = response.data;
 	const $ = cheerio.load(html);
@@ -385,12 +386,22 @@ const getCotzCambiosMaxiCambios = async () => {
 				arrayIndex++;
 			}
 		});
-		maxiCambios.push(cotzMoneda);
+		ASU.push(cotzMoneda);
 
 		cotzMoneda = {};
 		cambiosArraySplit = [];
 	});
-	maxiCambios.splice(17,6);
+	CDE = ASU.splice(17,6);
+	monedaNames = ['USD','ARS','BRL','EUR'];
+	let i=0;
+	CDE.forEach(el =>{
+		el.moneda = monedaNames[i];
+		if(i<4) i++;
+	});
+	CDE.splice(4,2);
+
+	maxiCambios.ASU = ASU;
+	maxiCambios.CDE = CDE;
 
 	return(maxiCambios);
 }
@@ -668,51 +679,51 @@ const getCotzSET = async () => {
 
 
 const getCotizaciones = async () => {
-/*
-	//CASAS DE CAMBIO
-	console.log('cambiosBonanza');
-	console.log(await getCotzCambiosBonanza());
-	console.log('cambiosChaco');
-	console.log(await getCotzCambiosChaco());
-	console.log('CambiosFe');
-	console.log(await getCotzCambiosFe());
-	console.log('CambiosLaMoneda');
-	console.log(await getCotzCambiosLaMoneda());
+
+	// //CASAS DE CAMBIO
+	// console.log('cambiosBonanza');
+	// console.log(await getCotzCambiosBonanza());
+	// console.log('cambiosChaco');
+	// console.log(await getCotzCambiosChaco());
+	// console.log('CambiosFe');
+	// console.log(await getCotzCambiosFe());
+	// console.log('CambiosLaMoneda');
+	// console.log(await getCotzCambiosLaMoneda());
 	console.log('cambiosMaxiCambios');
 	console.log(await getCotzCambiosMaxiCambios());
-	console.log('CambiosMercosur');
-	console.log(await getCotzCambiosMercosur());
-	console.log('CambiosMundial');
-	console.log(await getCotzCambiosMundial());
-	console.log('CambiosMYD');
-	console.log(await getCotzCambiosMYD());
-	console.log('CambiosPanorama');
-	console.log(await getCotzCambiosPanorama());
-	//console.log('CambiosRioParana');
-	//console.log(await getCotzCambiosRioParana());
-	console.log('CambiosYrendague');
-	console.log(await getCotzCambiosYrendague());
-	console.log('CambiosZafra');
-	console.log(await getCotzCambiosZafra());
-	//BANCOS
-	console.log('BancoBASA');
-	console.log(await getCotzBancoBASA());
-	console.log('BancoBNF');
-	console.log(await getCotzBancoBNF());
-	console.log('BancoContinental');
-	console.log(await getCotzBancoContinental());
-	console.log('BancoFamiliar');
-	console.log(await getCotzBancoFamiliar());
-	console.log('BancoInterfisa');
-	console.log(await getCotzBancoInterfisa());
-	console.log('BancoVision');
-	console.log(await getCotzBancoVision());
-	//OTROS
-	console.log('BCP');
-	console.log(await getCotzBCP());
-	console.log('SET');
-	console.log(await getCotzSET());
-*/
+	// console.log('CambiosMercosur');
+	// console.log(await getCotzCambiosMercosur());
+	// console.log('CambiosMundial');
+	// console.log(await getCotzCambiosMundial());
+	// console.log('CambiosMYD');
+	// console.log(await getCotzCambiosMYD());
+	// console.log('CambiosPanorama');
+	// console.log(await getCotzCambiosPanorama());
+	// //console.log('CambiosRioParana');
+	// //console.log(await getCotzCambiosRioParana());
+	// console.log('CambiosYrendague');
+	// console.log(await getCotzCambiosYrendague());
+	// console.log('CambiosZafra');
+	// console.log(await getCotzCambiosZafra());
+	// //BANCOS
+	// console.log('BancoBASA');
+	// console.log(await getCotzBancoBASA());
+	// console.log('BancoBNF');
+	// console.log(await getCotzBancoBNF());
+	// console.log('BancoContinental');
+	// console.log(await getCotzBancoContinental());
+	// console.log('BancoFamiliar');
+	// console.log(await getCotzBancoFamiliar());
+	// console.log('BancoInterfisa');
+	// console.log(await getCotzBancoInterfisa());
+	// console.log('BancoVision');
+	// console.log(await getCotzBancoVision());
+	// //OTROS
+	// console.log('BCP');
+	// console.log(await getCotzBCP());
+	// console.log('SET');
+	// console.log(await getCotzSET());
+
 }
 
 getCotizaciones();
