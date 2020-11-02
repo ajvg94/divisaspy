@@ -10,11 +10,11 @@
 ->CDE La Moneda Cambios S.A.
 ->CDE Bonanza Cambios
 ->FE CAMBIOS
-->zafra cambios
+->->zafra cambios
 //->cambios rio parana comentado porque esta desactualizado
-->mercosur cambios
-->panorama cambios
-->cambios yrendague
+->CDE mercosur cambios
+*->panorama cambios
+->CDE cambios yrendague
 ->banco continental
 ->BNF
 ->banco familiar
@@ -22,7 +22,7 @@
 xxx banco atlas
 xxx BBVA
 xxx EURO CAMBIOS
-CAMBIOS ALBERDI
+xxx CAMBIOS ALBERDI (http://cambiosalberdi.com/) NO EXISTE (?)
 norte cambios
 */
 const axios = require('axios');
@@ -782,8 +782,8 @@ const getCotizaciones = async () => {
 	// //console.log(await getCotzCambiosRioParana());
 	// console.log('CambiosYrendague');
 	// console.log(await getCotzCambiosYrendague());
-	console.log('CambiosZafra');
-	console.log(await getCotzCambiosZafra());
+	// console.log('CambiosZafra');
+	// console.log(await getCotzCambiosZafra());
 	// //BANCOS
 	// console.log('BancoBASA');
 	// console.log(await getCotzBancoBASA());
