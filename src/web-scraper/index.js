@@ -7,8 +7,8 @@
 ->->MYD CAMBIOS
 ->MUNDIAL CAMBIOS
 ->VISIÓN BANCO
-->La Moneda Cambios S.A.
-->Bonanza Cambios
+->CDE La Moneda Cambios S.A.
+->CDE Bonanza Cambios
 ->FE CAMBIOS
 ->zafra cambios
 //->cambios rio parana comentado porque esta desactualizado
@@ -648,7 +648,10 @@ const getCotzCambiosYrendague = async () => {
 
 const getCotzCambiosZafra = async () => {
 	const monedaNames = ['USD','BRL','EUR','ARS'];
-	let response = await axios.get('https://zafracambios.com.py/')
+	zafraCambios = [];
+	let ASU = [];
+	let CDE = [];
+	let response = await axios.get('https://zafracambios.com.py/');
 	const html = response.data;
 	const $ = cheerio.load(html);
 
@@ -659,9 +662,9 @@ const getCotzCambiosZafra = async () => {
 			cambiosArraySplit.push(removeAcento($(this).text().replace(/\s/g,"").replace(".","").replace(",",".").toLowerCase()).replace("xguaranies","").replace("peso","ARS"));
 		});
 	});
-	cambiosArraySplit.splice(0,21);cambiosArraySplit.splice(12,105);
+	let cambiosArraySplitCDE = cambiosArraySplit.splice(0,21);cambiosArraySplit.splice(12,105);
 
-	let cotzMoneda = {}, zafraCambios = [], i = 0, arrayIndex = 0;
+	let cotzMoneda = {}, i = 0, arrayIndex = 0;
 	cambiosArraySplit.forEach((el) => {
 		let parsedEl = parseFloat(el);
 		if((i+1)%3===1) {
@@ -671,11 +674,32 @@ const getCotzCambiosZafra = async () => {
 		if((i+1)%3===2) cotzMoneda.compra = parsedEl;
 		if((i+1)%3===0) {
 			cotzMoneda.venta = parsedEl;
-			zafraCambios.push(cotzMoneda);
+			ASU.push(cotzMoneda);
 			cotzMoneda = {};
 		}
 		i++;
 	});
+
+	cotzMoneda = {}, i = 0, arrayIndex = 0;
+	cambiosArraySplitCDE.splice(12,9);
+	cambiosArraySplitCDE.forEach((el) => {
+		let parsedEl = parseFloat(el);
+		if((i+1)%3===1) {
+			cotzMoneda.moneda = monedaNames[arrayIndex];
+			arrayIndex++;
+		}
+		if((i+1)%3===2) cotzMoneda.compra = parsedEl;
+		if((i+1)%3===0) {
+			cotzMoneda.venta = parsedEl;
+			CDE.push(cotzMoneda);
+			cotzMoneda = {};
+		}
+		i++;
+	});
+
+	zafraCambios.ASU = ASU;
+	zafraCambios.CDE = CDE;
+
 	return(zafraCambios);
 }
 //#endregion 
@@ -735,7 +759,6 @@ const getCotzSET = async () => {
 
 
 const getCotizaciones = async () => {
-
 	// //CASAS DE CAMBIO
 	// console.log('cambiosBonanza');
 	// console.log(await getCotzCambiosBonanza());
@@ -759,8 +782,8 @@ const getCotizaciones = async () => {
 	// //console.log(await getCotzCambiosRioParana());
 	// console.log('CambiosYrendague');
 	// console.log(await getCotzCambiosYrendague());
-	// console.log('CambiosZafra');
-	// console.log(await getCotzCambiosZafra());
+	console.log('CambiosZafra');
+	console.log(await getCotzCambiosZafra());
 	// //BANCOS
 	// console.log('BancoBASA');
 	// console.log(await getCotzBancoBASA());
