@@ -1,18 +1,20 @@
 # Divisaspy
-
+Web scrapper para obtener todas las cotizaciones de todas las divisas de todas las casas de cambio de Paraguay. La idea es meter esto adentro de una api de ponerla para el uso de quien lo necesite
 
 ---
-## Prerequisites
+## Prerequisitos
+Ninguno
 
 ---
 ## Dependencies
 
+
 ---
 ## Scripts
-To install dependencies:
+Para instalar el proyecto:
 `npm install`
 
-To start the package:
+Para ejecutar el proyecto:
 `npm start`
 
 ---
