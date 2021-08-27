@@ -63,7 +63,7 @@ const getCotzBancoBASA = async () => {
 };
 
 const getCotzBancoBNF = async () => {
-	const monedaNames = ['USD','ARS','BRL','EUR'];
+    const monedaNames = ['USD','','BRL','ARS','EUR'];
 	let response = await axios.get('https://www.bnf.gov.py/');
 	const html = response.data;
 	const $ = cheerio.load(html);

@@ -1,6 +1,6 @@
 /*
-BANCO AMAMBAY O BASA
 BANCO ATLAS
+BANCO BAASA
 BANCO BNF
 BANCO CONTINENTAL
 BANCO FAMILIAR
@@ -39,30 +39,6 @@ const removeAcentos = (text) =>{
     return text;                 
 };
 
-const bancoBaasa = async () => {
-    const monedaNames = ['USD','','BRL','ARS','EUR'];
-
-    //Obtenemos las cotizaciones
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto("https://www.bancobasa.com.py/", { waitUntil: 'networkidle0'});
-    let compra  = await page.evaluate(() => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.compra"), element => element.textContent));
-    let venta  = await page.evaluate(() => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.venta"), element => element.textContent));
-    await browser.close();
-
-    //Armamos el objeto
-    let  cotizacionesBancoBaasa = {}, i = 0;
-    monedaNames.forEach((moneda) =>{
-        cotizacionesBancoBaasa[moneda] = {
-            compra:parseFloat(compra[i]),
-            venta:parseFloat(venta[i])
-        };
-        i++;
-    });
-    delete cotizacionesBancoBaasa[''];
-    return cotizacionesBancoBaasa;
-};
-
 const bancoAtlas = async() => {
     const monedaNames = ['EUR','USD','BRL','ARS'];
 
@@ -86,100 +62,147 @@ const bancoAtlas = async() => {
     return cotizacionesBancoAtlas;
 };
 
-const bancoBnf = () => {
+const bancoBaasa = async() => {
+    const monedaNames = ['USD','','BRL','ARS','EUR'];
+
+    //Obtenemos las cotizaciones
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto("https://www.bancobasa.com.py/", { waitUntil: 'networkidle0'});
+    let compra  = await page.evaluate(() => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.compra"), element => element.textContent));
+    let venta  = await page.evaluate(() => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.venta"), element => element.textContent));
+    await browser.close();
+
+    //Armamos el objeto
+    let  cotizacionesBancoBaasa = {}, i = 0;
+    monedaNames.forEach((moneda) =>{
+        cotizacionesBancoBaasa[moneda] = {
+            compra:parseFloat(compra[i]),
+            venta:parseFloat(venta[i])
+        };
+        i++;
+    });
+    delete cotizacionesBancoBaasa[''];
+    return cotizacionesBancoBaasa;
+};
+
+const bancoBnf = async() => {
+    const monedaNames = ['USD','ARS','BRL','EUR'];
+
+    //Obtenemos las cotizaciones
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto("https://www.bnf.gov.py/", { waitUntil: 'networkidle0'});
+    let compra  = await page.evaluate(() => Array.from(document.querySelectorAll("table.cotiz-tabla tbody tr td:nth-child(2)"), element => element.textContent));
+    let venta  = await page.evaluate(() => Array.from(document.querySelectorAll("table.cotiz-tabla tbody tr td:nth-child(3)"), element => element.textContent));
+    await browser.close();
+
+    //Armamos el objeto
+    let  cotizacionesBancoBnf = {}, i = 0;
+    monedaNames.forEach((moneda) =>{
+        cotizacionesBancoBnf[moneda] = {
+            compra:parseFloat(compra[i]),
+            venta:parseFloat(venta[i])
+        };
+        i++;
+    });
+    return cotizacionesBancoBnf;
+};
+
+const bancoContinental = async() => {
 
 };
 
-const bancoContinental = () => {
+const bancoFamiliar = async() => {
 
 };
 
-const bancoFamiliar = () => {
+const bancoGnb = async() => {
 
 };
 
-const bancoGnb = () => {
+const bancoInterfisa = async() => {
 
 };
 
-const bancoInterfisa = () => {
+const bancoVision = async() => {
 
 };
 
-const bancoVision = () => {
+const cambiosAlberdi = async() => {
 
 };
 
-const cambiosAlberdi = () => {
+const cambiosBonanza = async() => {
 
 };
 
-const cambiosBonanza = () => {
+const cambiosChaco = async() => {
 
 };
 
-const cambiosChaco = () => {
+const cambiosEurocambios = async() => {
 
 };
 
-const cambiosEurocambios = () => {
+const cambiosFe = async() => {
 
 };
 
-const cambiosFe = () => {
+const cambiosMaxiCambios = async() => {
 
 };
 
-const cambiosMaxiCambios = () => {
+const cambiosMercosur = async() => {
 
 };
 
-const cambiosMercosur = () => {
+const cambiosMundial = async() => {
 
 };
 
-const cambiosMundial = () => {
+const cambiosMYD = async() => {
 
 };
 
-const cambiosMYD = () => {
+const cambiosNorte = async() => {
 
 };
 
-const cambiosNorte = () => {
+const cambiosPanorama = async() => {
 
 };
 
-const cambiosPanorama = () => {
+const cambiosRioParana = async() => {
 
 };
 
-const cambiosRioParana = () => {
+const cambiosYrendague = async() => {
 
 };
 
-const cambiosYrendague = () => {
+const cambiosZafra = async() => {
 
 };
 
-const cambiosZafra = () => {
+const govBCP = async() => {
 
 };
 
-const govBCP = () => {
-
-};
-
-const govSET = () => {
+const govSET = async() => {
 
 };
 
 const main = async() => {
-    console.log("cotizacionesBancoBaasa")
+    
+    console.log("cotizacionesBancoAtlas");
+    console.log(await bancoAtlas());
+
+    console.log("cotizacionesBancoBaasa");
     console.log(await bancoBaasa());
 
-    console.log("cotizacionesBancoAtlas")
-    console.log(await bancoAtlas());
+    console.log("cotizacionesBancoBNF");
+    console.log(await bancoBnf());
 };
 main();
 
