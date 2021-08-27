@@ -1,7 +1,9 @@
 # Divisaspy
-Web scrapper para obtener todas las cotizaciones de todas las divisas de todas las casas de cambio de Paraguay. La idea es meter esto adentro de una api de ponerla para el uso de quien lo necesite
+
+Web scrapper para obtener todas las cotizaciones de todas las divisas de todas las casas de cambio de Paraguay.
 
 ---
+
 ## Bancos y Casas de cambio incluidas
 
 ### **Bancos**
@@ -38,6 +40,7 @@ Web scrapper para obtener todas las cotizaciones de todas las divisas de todas l
 2. [GOV SET](https://www.set.gov.py/portal/PARAGUAY-SET/)
 
 ---
+
 ## Dependencias
 
     "axios": "^0.21.1",
@@ -46,7 +49,9 @@ Web scrapper para obtener todas las cotizaciones de todas las divisas de todas l
     "puppeteer": "^10.2.0"
 
 ---
+
 ## Scripts
+
 Para instalar el proyecto:
 `npm install`
 
