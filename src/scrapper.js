@@ -46,8 +46,8 @@ const bancoBaasa = async () => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto("https://www.bancobasa.com.py/", { waitUntil: 'networkidle0'});
-    let compra  = await page.evaluate((div) => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.compra"), element => element.textContent));
-    let venta  = await page.evaluate((div) => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.venta"), element => element.textContent));
+    let compra  = await page.evaluate(() => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.compra"), element => element.textContent));
+    let venta  = await page.evaluate(() => Array.from(document.querySelectorAll("ul.trendscontent>li>a.search_link>span.venta"), element => element.textContent));
     await browser.close();
 
     //Armamos el objeto
@@ -60,13 +60,30 @@ const bancoBaasa = async () => {
         i++;
     });
     delete cotizacionesBancoBaasa[''];
-    console.log(cotizacionesBancoBaasa);
+    return cotizacionesBancoBaasa;
 };
-bancoBaasa();
 
+const bancoAtlas = async() => {
+    const monedaNames = ['EUR','USD','BRL','ARS'];
 
-const bancoAtlas = () => {
+    //Obtenemos las cotizaciones
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto("https://www.bancoatlas.com.py/web/", { waitUntil: 'networkidle0'});
+    let compra  = await page.evaluate(() => Array.from(document.querySelectorAll("table.cotizacion-table tbody tr td:nth-child(2)"), element => element.textContent));
+    let venta  = await page.evaluate(() => Array.from(document.querySelectorAll("table.cotizacion-table tbody tr td:nth-child(3)"), element => element.textContent));
+    await browser.close();
 
+    //Armamos el objeto
+    let  cotizacionesBancoAtlas = {}, i = 0;
+    monedaNames.forEach((moneda) =>{
+        cotizacionesBancoAtlas[moneda] = {
+            compra:parseFloat(compra[i]),
+            venta:parseFloat(venta[i])
+        };
+        i++;
+    });
+    return cotizacionesBancoAtlas;
 };
 
 const bancoBnf = () => {
@@ -157,8 +174,14 @@ const govSET = () => {
 
 };
 
+const main = async() => {
+    console.log("cotizacionesBancoBaasa")
+    console.log(await bancoBaasa());
 
-
+    console.log("cotizacionesBancoAtlas")
+    console.log(await bancoAtlas());
+};
+main();
 
 
 
